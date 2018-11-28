@@ -3,7 +3,7 @@ from flask import session as login_session
 import random, string
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from Database_set_FinalProject import Base, Category, CategoryItem, user
+from Database_set_FinalProject import Base, Category, CategoryItem, User
 
 # IMPORTS FOR THIS STEP
 from oauth2client.client import flow_from_clientsecrets
@@ -126,6 +126,26 @@ def gconnect():
     return output
 
 
+def createUser(login_session):
+    newUser = User(name=login_session['username'], email=login_session[
+                   'email'], picture=login_session['picture'])
+    session.add(newUser)
+    session.commit()
+    user = session.query(User).filter_by(email=login_session['email']).one()
+    return user.id
+
+def getUserInfo(user_id):
+    user = session.query(User).filter_by(id=user_id).one()
+    return user
+
+def getUserID(email):
+    try:
+        user = session.query(User).filter_by(email=email).one()
+        return user.id
+    except:
+        return None
+
+
 @app.route('/gdisconnect')
 def gdisconnect():
     access_token = login_session.get('access_token')
@@ -137,7 +157,7 @@ def gdisconnect():
     print 'In gdisconnect access token is %s', access_token
     print 'User name is: '
     print login_session['username']
-    url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % login_session['access_token']
+    url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % access_token
     h = httplib2.Http()
     result = h.request(url, 'GET')[0]
     print 'result is '
@@ -267,8 +287,8 @@ def category_Items(category_id):
 
 @app.route('/categories/<int:category_id>/new/', methods=['GET','POST'])
 def newCategoryItem(category_id):
-    # if 'username' not in login_session:
-    #     return redirect ('login')
+    if 'username' not in login_session:
+        return redirect ('login')
     if request.method == 'POST':
         newItem = CategoryItem(name=request.form['name'], category_id=category_id)
         session.add(newItem)
@@ -310,4 +330,5 @@ def DeleteCategoryItem(category_id,categoryItem):
 if __name__ == '__main__':
     app.secret_key='super_secret_Key'
     app.debug = True
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port=5000, threaded=False)
+
