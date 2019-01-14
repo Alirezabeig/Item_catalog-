@@ -149,8 +149,8 @@ def getUserID(email):
 
 @app.route('/gdisconnect')
 def gdisconnect():
-    access_token = login_session.get('access_token')
-    if access_token is None:
+    credentials = login_session.get('credentials') 
+    if credentials is None:
         print 'Access Token is None'
         response = make_response(json.dumps('Current user not connected.'), 401)
         response.headers['Content-Type'] = 'application/json'
