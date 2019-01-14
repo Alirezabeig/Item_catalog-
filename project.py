@@ -291,7 +291,7 @@ def newCategoryItem(category_id):
     if 'username' not in login_session:
         return redirect ('login')
     if request.method == 'POST':
-        newItem = CategoryItem(name=request.form['name'], category_id=category_id)
+        newItem = CategoryItem(name=request.form['name'],user_id=login_session['user_id']) # category_id=category_id)
         session.add(newItem)
         session.commit()
         flash ("New Category Item Is Just Created")
