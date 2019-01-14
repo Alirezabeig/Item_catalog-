@@ -328,15 +328,7 @@ def DeleteCategoryItem(category_id,categoryItem):
         return render_template('deleteCategoryItem.html', i=deleteItem)
 
     
- # Create a user in the database 
-def createUser(login_session):
-    newUser = User(name=login_session['username'], email=login_session[
-                   'email'], picture=login_session['picture'])
-    session.add(newUser)
-    session.commit()
-    user = session.query(User).filter_by(email=login_session['email']).one()
-    return user.id
-
+ 
 if __name__ == '__main__':
     app.secret_key='super_secret_Key'
     app.debug = True
