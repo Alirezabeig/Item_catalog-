@@ -23,5 +23,5 @@ Launch Project
 Launch the Vagrant VM using command:
   $ vagrant up
 Run your application within the VM
-  $ python /vagrant/project.py
+  $ python /vagrant/catalog/project.py
 Access and test your application by visiting http://localhost:5000.
