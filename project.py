@@ -1,11 +1,13 @@
+
+#================================
+# Imports for the project 
+#================================
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 from flask import session as login_session
 import random, string
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from Database_set_FinalProject import Base, Category, CategoryItem, User
-
-# IMPORTS FOR THIS STEP
 from oauth2client.client import flow_from_clientsecrets
 from oauth2client.client import FlowExchangeError
 import httplib2
@@ -13,13 +15,19 @@ import json
 from flask import make_response
 import requests
 
+
+#===============================
+# Client_ID for GConnect 
+#================================
 CLIENT_ID = json.loads(
     open('client_secret.json', 'r').read())['web']['client_id']
 APPLICATION_NAME = "Item Catalog_S"
 
 
 app = Flask (__name__)
-
+#================================
+# Database - CategoryUsers
+#================================
 engine = create_engine ('sqlite:///CategoryUsers.db')
 Base.metadata.bind= engine
 
@@ -35,6 +43,10 @@ def showLogin():
     login_session['state'] = state
     return render_template('login.html', STATE=state)
 
+
+#================================
+# Login using gmail 
+#================================
 @app.route('/gconnect', methods=['POST'])
 def gconnect():
     # Validate state token
@@ -147,6 +159,9 @@ def getUserID(email):
         return None
 
 
+#=====================================
+# Logout if you logged in using gmail 
+#=====================================
 @app.route('/gdisconnect')
 def gdisconnect():
     credentials = login_session.get('credentials') 
@@ -177,6 +192,10 @@ def gdisconnect():
         response.headers['Content-Type'] = 'application/json'
         return response
 
+
+#================================
+# Facebook login  
+#================================
 @app.route('/fbconnect', methods=['POST'])
 def fbconnect():
     if request.args.get('state') != login_session['state']:
@@ -237,6 +256,10 @@ def fbconnect():
     flash("Now logged in as %s" % login_session['username'], 'success')
     return output
 
+
+#================================
+# facebook logout
+#================================
 @app.route('/fbdisconnect')
 def fbdisconnect():
     facebook_id = login_session['facebook_id']
@@ -268,6 +291,11 @@ def cate():
     #     output += '</br>'
     #     output += '</br>'
     # return output
+    
+
+#================================
+# Show categories items
+#================================
 @app.route('/categories/<int:category_id>')
 def category_Items(category_id):
     category= session.query(Category).filter_by(id=category_id).one()
@@ -286,6 +314,9 @@ def category_Items(category_id):
     #
 
 
+#================================
+# Add new category  
+#================================
 @app.route('/categories/<int:category_id>/new/', methods=['GET','POST'])
 def newCategoryItem(category_id):
     
@@ -303,7 +334,7 @@ def newCategoryItem(category_id):
     else:
         return render_template('newcategoryitem.html', category_id=category_id)
 
-#this will be for editing an item in a specific category
+#Edit existing category 
 @app.route('/categories/<int:category_id>/<int:categoryItem>/edit/',methods=['GET','POST'])
 def EditCategoryItem(category_id,categoryItem):
     editedItem = session.query(CategoryItem).filter_by(id=categoryItem).one()
@@ -320,7 +351,7 @@ def EditCategoryItem(category_id,categoryItem):
         return render_template('editCategroyItem.html', category_id=category_id, CategoryItem=categoryItem, i=editedItem)
 
 
-# this will be for deleting an item from the category.
+# Delete existing category 
 @app.route('/categories/<int:category_id>/<int:categoryItem>/delete/',methods=['GET','POST'])
 def DeleteCategoryItem(category_id,categoryItem):
     deleteItem= session.query(CategoryItem).filter_by(id=categoryItem).one()
