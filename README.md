@@ -22,6 +22,10 @@ Find the catalog folder and replace it with the content of this current reposito
 Launch Project
 Launch the Vagrant VM using command:
   $ vagrant up
+ 
+In order to set up the detabas run this code:
+python Database_set_FinalProject.py
+
 Run your application within the VM
   $ python /vagrant/catalog/project.py
 Access and test your application by visiting http://localhost:5000.
