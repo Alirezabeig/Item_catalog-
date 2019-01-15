@@ -290,13 +290,6 @@ def categoryItemsJason():
 def cate():
     category= session.query(Category).all()
     return render_template ('category_c.html', category=category)
-    # output = ''
-    # for i in cat:
-    #     output += i.name
-    #
-    #     output += '</br>'
-    #     output += '</br>'
-    # return output
     
 
 #================================
@@ -307,17 +300,6 @@ def category_Items(category_id):
     category= session.query(Category).filter_by(id=category_id).one()
     items = session.query(CategoryItem).filter_by(category_id=category.id)
     return render_template ('catItems.html',category=category, items=items)
-
-
-
-    # output = ''
-    # for i in items:
-    #     output += i.name
-    #
-    #     output += '</br>'
-    #     output += '</br>'
-    # return output
-    #
 
 
 #================================
