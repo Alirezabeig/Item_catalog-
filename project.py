@@ -288,9 +288,12 @@ def category_Items(category_id):
 
 @app.route('/categories/<int:category_id>/new/', methods=['GET','POST'])
 def newCategoryItem(category_id):
-    if 'username' not in login_session:
-        return redirect ('login')
+    
     if request.method == 'POST':
+        
+        if 'username' not in login_session:
+        return redirect ('login')
+    
         newItem = CategoryItem(name=request.form['name'],user_id=login_session['user_id']) # category_id=category_id)
         session.add(newItem)
         session.commit()
@@ -304,6 +307,8 @@ def newCategoryItem(category_id):
 @app.route('/categories/<int:category_id>/<int:categoryItem>/edit/',methods=['GET','POST'])
 def EditCategoryItem(category_id,categoryItem):
     editedItem = session.query(CategoryItem).filter_by(id=categoryItem).one()
+    if 'username' not in login_session:
+        return redirect ('login')
     if request.method=='POST':
         if request.form['name']:
             editedItem.name=request.form['name']
@@ -319,6 +324,8 @@ def EditCategoryItem(category_id,categoryItem):
 @app.route('/categories/<int:category_id>/<int:categoryItem>/delete/',methods=['GET','POST'])
 def DeleteCategoryItem(category_id,categoryItem):
     deleteItem= session.query(CategoryItem).filter_by(id=categoryItem).one()
+    if 'username' not in login_session:
+        return redirect ('login')
     if request.method=='POST':
         session.delete(deleteItem)
         session.commit()
