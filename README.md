@@ -23,7 +23,7 @@ Launch Project
 Launch the Vagrant VM using command:
   $ vagrant up
  
-In order to set up the detabas run this code:
+In order to set up the detabas run this code in this director /vagrant/catalog/ :
 python Database_set_FinalProject.py
 
 Run your application within the VM
