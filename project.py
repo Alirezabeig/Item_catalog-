@@ -279,7 +279,8 @@ def fbdisconnect():
 def categoryItemsJason():
     category= session.query(Category).all()
     items = session.query(CategoryItem).all()
-    return jsonify(cat=[j.serialize for j in category], category_Items=[i.serialize for i in items] )
+    return jsonify(cat=[j.serialize for j in category], 
+                   category_Items=[i.serialize for i in items] )
 
 
 
