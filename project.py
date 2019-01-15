@@ -3,6 +3,7 @@
 # Imports for the project 
 #================================
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
+from sqlalchemy.orm.exc import NoResultFound
 from flask import session as login_session
 import random, string
 from sqlalchemy import create_engine
@@ -158,7 +159,7 @@ def getUserID(email):
     try:
         user = session.query(User).filter_by(email=email).one()
         return user.id
-    except:
+    except NoResultFound:
         return None
 
 
