@@ -311,7 +311,7 @@ def newCategoryItem(category_id):
     if request.method == 'POST':
         
         if 'username' not in login_session:
-        return redirect ('login')
+            return redirect ('login')
     
         newItem = CategoryItem(name=request.form['name'],user_id=login_session['user_id']) # category_id=category_id)
         session.add(newItem)
