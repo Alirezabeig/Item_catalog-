@@ -244,29 +244,32 @@ def cate():
 # Show categories items
 #================================
 @app.route('/categories/<int:category_id>')
+@login_required
 def category_Items(category_id):
     category= session.query(Category).filter_by(id=category_id).one()
     items = session.query(CategoryItem).filter_by(category_id=category.id)
     return render_template ('catItems.html',category=category, items=items)
 
 
-#================================
-# Add new category  
-#================================
-@app.route('/categories/<int:category_id>/new/', methods=['GET','POST'])
+
+## Add a new item to the category
+@app.route('/categories/<int:category_id>/item/new', methods=['GET','POST'])
+@login_required
 def newCategoryItem(category_id):
-    
     if request.method == 'POST':
-        
-        if 'username' not in login_session:
-            return redirect ('login')
-    
-        newItem = CategoryItem(name=request.form['name'],user_id=login_session['user_id']) # category_id=category_id)
+        print login_session
+        if 'user_id' not in login_session and 'email' in login_session:
+            login_session['user_id'] = getUserID(login_session['email'])
+
+        newItem = CategoryItem(
+                    name=request.form['name'],
+                    user_id=login_session['user_id'],
+                    category_id=category_id)
         session.add(newItem)
         session.commit()
-        flash ("New Category Item Is Just Created")
+        flash ("New Item Is Just Created")
         #return redirect(url_for('category_Items', category_id=category_id))
-        return redirect(url_for('cate'))
+        return redirect(url_for('category_Items',category_id=category_id))
     else:
         return render_template('newcategoryitem.html', category_id=category_id)
 
