@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from Database_set_FinalProject import Base, Category, CategoryItem
+from Database_set_FinalProject import Base, Category, CategoryItem, User
 
 engine = create_engine('sqlite:///CategoryUsers.db')
 # Bind the engine to the metadata of the Base class so that the
