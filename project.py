@@ -288,6 +288,7 @@ def clearSession():
  
 #Edit existing category 
 @app.route('/categories/<int:category_id>/<int:categoryItem>/edit/',methods=['GET','POST'])
+@login_required
 def EditCategoryItem(category_id,categoryItem):
     editedItem = session.query(CategoryItem).filter_by(id=categoryItem).one()
     if editedItem.user_id != login_session['user_id']:
@@ -305,6 +306,7 @@ def EditCategoryItem(category_id,categoryItem):
 
 # Delete existing category 
 @app.route('/categories/<int:category_id>/<int:categoryItem>/delete/',methods=['GET','POST'])
+@login_required
 def DeleteCategoryItem(category_id,categoryItem):
     deleteItem= session.query(CategoryItem).filter_by(id=categoryItem).one()
     if deleteItem.user_id != login_session['user_id']:
