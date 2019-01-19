@@ -307,8 +307,8 @@ def EditCategoryItem(category_id,categoryItem):
 @app.route('/categories/<int:category_id>/<int:categoryItem>/delete/',methods=['GET','POST'])
 def DeleteCategoryItem(category_id,categoryItem):
     deleteItem= session.query(CategoryItem).filter_by(id=categoryItem).one()
-    if 'username' not in login_session:
-        return redirect ('login')
+    if deleteItem.user_id != login_session['user_id']:
+        return "<script>function myFunction() {alert('Ooops! You are not authorized to delete!')}</script><body onload='myFunction()'>" 
     if request.method=='POST':
         session.delete(deleteItem)
         session.commit()
