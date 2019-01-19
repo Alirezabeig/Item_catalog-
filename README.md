@@ -22,7 +22,8 @@ Find the catalog folder and replace it with the content of this current reposito
 Launch Project
 Launch the Vagrant VM using command:
   $ vagrant up
- 
+******** In order to have categories in your file, you should run this code: python CategoryMore.py  ****
+******** Also don't forget this program allows you to only edit, delete and add new items as a logged in user to only existing categories.*****
 In order to set up the detabas run this code in this director /vagrant/catalog/ :
 python Database_set_FinalProject.py
 
