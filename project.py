@@ -273,6 +273,13 @@ def newCategoryItem(category_id):
     else:
         return render_template('newcategoryitem.html', category_id=category_id)
 
+ # For cleanning sessions , in case it keeps you logged in.
+@app.route('/clearsession')
+def clearSession():
+    login_session.clear()
+    return "Session cleared"
+   
+ 
 #Edit existing category 
 @app.route('/categories/<int:category_id>/<int:categoryItem>/edit/',methods=['GET','POST'])
 def EditCategoryItem(category_id,categoryItem):
