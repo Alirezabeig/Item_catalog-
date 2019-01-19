@@ -290,8 +290,8 @@ def clearSession():
 @app.route('/categories/<int:category_id>/<int:categoryItem>/edit/',methods=['GET','POST'])
 def EditCategoryItem(category_id,categoryItem):
     editedItem = session.query(CategoryItem).filter_by(id=categoryItem).one()
-    if 'username' not in login_session:
-        return redirect ('login')
+    if editedItem.user_id != login_session['user_id']:
+        return "<script>function myFunction() {alert('Ooops! You are not authorized to edit!')}</script><body onload='myFunction()'>" 
     if request.method=='POST':
         if request.form['name']:
             editedItem.name=request.form['name']
