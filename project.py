@@ -2,7 +2,13 @@
 #================================
 # Imports for the project
 #================================
-from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
+from flask import (
+    Flask, 
+    render_template,
+    request, redirect,
+    url_for, flash,
+    jsonify
+)
 from sqlalchemy.orm.exc import NoResultFound
 from flask import session as login_session
 import random, string
