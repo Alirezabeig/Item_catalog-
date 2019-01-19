@@ -292,7 +292,8 @@ def clearSession():
 def EditCategoryItem(category_id,categoryItem):
     editedItem = session.query(CategoryItem).filter_by(id=categoryItem).one()
     if editedItem.user_id != login_session['user_id']:
-        return "<script>function myFunction() {alert('Ooops! You are not authorized to edit!')}</script><body onload='myFunction()'>" 
+        return "<script>function myFunction() {alert('Ooops! You are not authorized to edit!')} \
+                        </script><body onload='myFunction()'>" 
     if request.method=='POST':
         if request.form['name']:
             editedItem.name=request.form['name']
@@ -301,7 +302,8 @@ def EditCategoryItem(category_id,categoryItem):
         flash ("Item successfully edited")
         return redirect(url_for('category_Items', category_id=category_id))
     else:
-        return render_template('editCategroyItem.html', category_id=category_id, CategoryItem=categoryItem, i=editedItem)
+        return render_template('editCategroyItem.html', category_id=category_id, 
+                               CategoryItem=categoryItem, i=editedItem)
 
 
 # Delete existing category 
@@ -310,7 +312,8 @@ def EditCategoryItem(category_id,categoryItem):
 def DeleteCategoryItem(category_id,categoryItem):
     deleteItem= session.query(CategoryItem).filter_by(id=categoryItem).one()
     if deleteItem.user_id != login_session['user_id']:
-        return "<script>function myFunction() {alert('Ooops! You are not authorized to delete!')}</script><body onload='myFunction()'>" 
+        return "<script>function myFunction() {alert('Ooops! You are not authorized to delete!')} \
+                    </script><body onload='myFunction()'>" 
     if request.method=='POST':
         session.delete(deleteItem)
         session.commit()
