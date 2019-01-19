@@ -1,6 +1,6 @@
 
 #================================
-# Imports for the project 
+# Imports for the project
 #================================
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 from sqlalchemy.orm.exc import NoResultFound
@@ -13,12 +13,13 @@ from oauth2client.client import flow_from_clientsecrets
 from oauth2client.client import FlowExchangeError
 import httplib2
 import json
+from functools import wraps
 from flask import make_response
 import requests
 
 
 #===============================
-# Client_ID for GConnect 
+# Client_ID for GConnect
 #================================
 CLIENT_ID = json.loads(
     open('client_secret.json', 'r').read())['web']['client_id']
@@ -35,6 +36,15 @@ Base.metadata.bind= engine
 DBsession = sessionmaker (bind=engine)
 session=DBsession()
 
+#Function- decorator for making sure users are logged if __name__ == '__main__':
+def login_required(parm):
+    @wraps(parm)
+    def decorated_function(*args, **kwargs):
+        if 'user_id' not in login_session:
+            return redirect(url_for('showLogin'))
+        return parm(*args, **kwargs)
+    return decorated_function
+
 # Login route, create anit-forgery state token
 @app.route('/login')
 def showLogin():
@@ -43,7 +53,6 @@ def showLogin():
             string.ascii_uppercase + string.digits) for x in xrange(32))
     login_session['state'] = state
     return render_template('login.html', STATE=state)
-
 
 #================================
 # Login using gmail 
