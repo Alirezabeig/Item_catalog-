@@ -54,8 +54,9 @@ def showLogin():
     login_session['state'] = state
     return render_template('login.html', STATE=state)
 
+
 #================================
-# Login using gmail 
+# Login using gmail
 #================================
 @app.route('/gconnect', methods=['POST'])
 def gconnect():
@@ -146,7 +147,7 @@ def gconnect():
     output += ' " style = "width: 100px; \
                     height: 100px;border-radius:\
                     150px;-webkit-border-radius: \
-                    150px;-moz-border-radius: 150px;"> '  
+                    150px;-moz-border-radius: 150px;"> '
     flash("you are now logged in as %s" % login_session['username'], 'success')
     print "done!"
     return output
@@ -173,17 +174,19 @@ def getUserID(email):
 
 
 #=====================================
-# Logout if you logged in using gmail 
+# Logout if you logged in using gmail
 #=====================================
 @app.route('/gdisconnect')
 def gdisconnect():
-    credentials = login_session.get('credentials') 
+    credentials = login_session.get('credentials')
     if credentials is None:
         print 'Access Token is None'
-        response = make_response(json.dumps('Current user not connected.'), 401)
-        response.headers['Content-Type'] = 'application/json'
+        response = make_response(
+            json.dumps('Current user not logged in.'), 401)
+        response.headers['Content-type'] = 'application/json'
         return response
-    print 'In gdisconnect access token is %s', access_token
+
+    print 'In gdisconnect access token is %s', credentials
     print 'User name is: '
     print login_session['username']
     url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % credentials
@@ -193,7 +196,7 @@ def gdisconnect():
     print result
     if result['status'] == '200':
         #del login_session['access_token']
-        del login_session['crendtials']
+        del login_session['credentials']
         del login_session['gplus_id']
         del login_session['username']
         del login_session['email']
@@ -205,70 +208,6 @@ def gdisconnect():
         response = make_response(json.dumps('Failed to revoke token for given user.', 400))
         response.headers['Content-Type'] = 'application/json'
         return response
-
-
-#================================
-# Facebook login  
-#================================
-@app.route('/fbconnect', methods=['POST'])
-def fbconnect():
-    if request.args.get('state') != login_session['state']:
-        response = make_response(json.dumps('Invalid state parameter.'), 401)
-        response.headers['Content-Type'] = 'application/json'
-        return response
-    access_token = request.data
-    print "access token received %s " % access_token
-
-    app_id = json.loads(open('fb_client_secrets.json', 'r').read())[
-        'web']['app_id']
-    app_secret = json.loads(
-        open('fb_client_secrets.json', 'r').read())['web']['app_secret']
-    url = 'https://graph.facebook.com/oauth/access_token?grant_type=fb_exchange_token&client_id=%s&client_secret=%s&fb_exchange_token=%s' % (  # noqa
-        app_id, app_secret, access_token)
-    h = httplib2.Http()
-    result = h.request(url, 'GET')[1]
-
-    # Use token to get user info from API
-    userinfo_url = "https://graph.facebook.com/v2.8/me"
-    # strip expire tag from access token
-    token = result.split("&")[0]
-
-    url = 'https://graph.facebook.com/v2.8/me?fields=id%2Cname%2Cemail%2Cpicture&access_token=' + access_token  # noqa
-    h = httplib2.Http()
-    result = h.request(url, 'GET')[1]
-    # print "url sent for API access:%s"% url
-    # print "API JSON result: %s" % result
-    data = json.loads(result)
-
-    login_session['provider'] = 'facebook'
-    login_session['username'] = data["name"]
-    login_session['email'] = data["email"]
-    login_session['facebook_id'] = data["id"]
-
-    # The token must be stored in the login_session
-    # in order to properly logout
-    login_session['access_token'] = access_token
-
-    # Get user picture
-    login_session['picture'] = data["picture"]["data"]["url"]
-
-    # see if user exists
-    user_id = getUserID(login_session['email'])
-    if not user_id:
-        user_id = createUser(login_session)
-    login_session['user_id'] = user_id
-
-    output = ''
-    output += '<h1>Welcome, '
-    output += login_session['username']
-
-    output += '!</h1>'
-    output += '<img src="'
-    output += login_session['picture']
-    output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '  # noqa
-
-    flash("Now logged in as %s" % login_session['username'], 'success')
-    return output
 
 
 #================================
