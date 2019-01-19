@@ -4,13 +4,14 @@
 
 <h1>New Category Item</h1>
 
-<form action="{{url_for('newCategoryItem', category_id=category_id )}}" method = 'POST'>
+
+<form action="{{url_for('newCategoryItem', category_id=category_id)}}" method = 'POST'>
 
 <p>Name:</p>
 
-<input type="text" name="25" required>
 
-<input type='submit' value='Create'>
+<input type="text" name='name' required>
+<input type='submit' value='Submit'>
 
 </form>
 
