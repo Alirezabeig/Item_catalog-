@@ -18,6 +18,11 @@ DBSession = sessionmaker(bind=engine)
 # session.rollback()
 session = DBSession()
 
+User1=User(name='username')
+session.add(User1)
+session.commit()
+
+
 
 # Category 1 - and its items
 Category1 = Category(name="Soccer")
