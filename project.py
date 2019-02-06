@@ -28,7 +28,7 @@ import requests
 # Client_ID for GConnect
 #================================
 CLIENT_ID = json.loads(
-    open('client_secret.json', 'r').read())['web']['client_id']
+    open('/var/www/Item_catalog/Item_catalog/client_secrets.json', 'r').read())['web']['client_id']
 APPLICATION_NAME = "Item Catalog_S"
 
 
